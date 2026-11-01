@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#cce5d7">
+  <title>BMO face</title>
+  <style>
+    :root { --screen: #cce5d7; --ink: #26352d; --blush: #ec9b9c; }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body { background: var(--screen); cursor: none; user-select: none; -webkit-user-select: none; }
+    main { width: 100vw; height: 100dvh; min-height: 100vh; display: grid; place-items: center; pointer-events: none; }
+    svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .expression, #sleep-face, #talk-mouth, #thinking-dots, #listening-rings { opacity: 0; }
+    body[data-emotion="neutral"] #neutral,
+    body[data-emotion="happy"] #happy,
+    body[data-emotion="love"] #love,
+    body[data-emotion="sad"] #sad,
+    body[data-emotion="surprised"] #surprised,
+    body[data-emotion="angry"] #angry,
+    body[data-emotion="shy"] #shy,
+    body[data-emotion="curious"] #curious { opacity: 1; }
+    .eyes { transform-origin: 400px 207px; animation: blink 5.6s infinite; }
+    body.force-blink .eyes { animation: blink-once .25s ease-in-out; }
+    body[data-activity="sleeping"] .expression { opacity: 0 !important; }
+    body[data-activity="sleeping"] #sleep-face { opacity: 1; }
+    body[data-activity="sleeping"] #sleep-face .zzz { animation: float-z 2.5s ease-in-out infinite; }
+    body[data-activity="sleeping"] #sleep-face .zzz.second { animation-delay: 1.1s; }
+    body[data-activity="thinking"] #thinking-dots { opacity: 1; animation: drift 1.8s ease-in-out infinite; }
+    body[data-activity="listening"] #listening-rings { opacity: 1; animation: breathe 1.5s ease-in-out infinite; }
+    body.talking .expression .mouth-static { opacity: 0; }
+    body.talking #talk-mouth { opacity: 1; }
+    #talk-mouth .mouth-shape { opacity: 0; }
+    body.talking[data-mouth="line"] #mouth-line,
+    body.talking[data-mouth="dot"] #mouth-dot,
+    body.talking[data-mouth="slit"] #mouth-slit,
+    body.talking[data-mouth="small"] #mouth-small,
+    body.talking[data-mouth="wide"] #mouth-wide { opacity: 1; }
+    .cheek { fill: var(--blush); opacity: .48; }
+    .stroke { fill: none; stroke: var(--ink); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+    .thin { stroke-width: 7; }
+    .ink { fill: var(--ink); }
+    @keyframes blink { 0%, 43%, 46%, 100% { transform: scaleY(1); } 44.5% { transform: scaleY(.08); } }
+    @keyframes blink-once { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.08); } }
+    @keyframes float-z { 0% { transform: translateY(9px); opacity: .15; } 50% { opacity: .8; } 100% { transform: translateY(-13px); opacity: .15; } }
+    @keyframes drift { 0%, 100% { transform: translateX(-7px); } 50% { transform: translateX(7px); } }
+    @keyframes breathe { 0%, 100% { transform: scale(.94); opacity: .35; } 50% { transform: scale(1.08); opacity: .8; } }
+    @media (prefers-reduced-motion: reduce) { .eyes, .zzz, #thinking-dots, #listening-rings { animation-duration: 1s !important; } }
+  </style>
+</head>
+<body data-emotion="neutral" data-activity="idle" aria-label="BMO's robot face">
+  <main>
+    <svg viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Animated robot face">
+      <!-- The neutral face follows the first reference: small oval eyes and a short smile. -->
+      <g class="expression" id="neutral">
+        <g class="eyes"><ellipse class="ink" cx="302" cy="208" rx="11" ry="18"/><ellipse class="ink" cx="498" cy="208" rx="11" ry="18"/></g>
+        <path class="stroke thin mouth-static" d="M 371 277 Q 400 300 429 277"/>
+      </g>
+      <g class="expression" id="happy">
+        <g class="eyes"><path class="stroke" d="M 273 215 Q 302 181 331 215 M 469 215 Q 498 181 527 215"/></g>
+        <ellipse class="cheek" cx="246" cy="263" rx="26" ry="12"/><ellipse class="cheek" cx="554" cy="263" rx="26" ry="12"/>
+        <path class="ink mouth-static" d="M 346 272 Q 400 321 454 272 Q 453 341 400 342 Q 347 341 346 272 Z"/>
+        <path class="mouth-static" d="M 376 327 Q 400 309 424 327" fill="none" stroke="#e89d9b" stroke-width="9" stroke-linecap="round"/>
+      </g>
+      <g class="expression" id="love">
+        <g class="eyes ink">
+          <path d="M 302 224 C 258 190 274 157 302 179 C 330 157 346 190 302 224 Z"/>
+          <path d="M 498 224 C 454 190 470 157 498 179 C 526 157 542 190 498 224 Z"/>
+        </g>
+        <ellipse class="cheek" cx="249" cy="260" rx="27" ry="13"/><ellipse class="cheek" cx="551" cy="260" rx="27" ry="13"/>
+        <path class="stroke mouth-static" d="M 360 278 Q 400 324 440 278"/>
+      </g>
+      <g class="expression" id="sad">
+        <g class="eyes"><ellipse class="ink" cx="302" cy="210" rx="11" ry="16"/><ellipse class="ink" cx="498" cy="210" rx="11" ry="16"/>
+          <path class="stroke thin" d="M 273 171 Q 300 160 326 181 M 474 181 Q 500 160 527 171"/></g>
+        <path class="stroke mouth-static" d="M 365 299 Q 400 267 435 299"/>
+        <path d="M 526 234 Q 548 270 526 275 Q 506 275 526 234 Z" fill="#7bb8ba"/>
+      </g>
+      <g class="expression" id="surprised">
+        <g class="eyes"><circle class="ink" cx="302" cy="207" r="23"/><circle class="ink" cx="498" cy="207" r="23"/></g>
+        <ellipse class="ink mouth-static" cx="400" cy="291" rx="25" ry="34"/>
+      </g>
+      <g class="expression" id="angry">
+        <g class="eyes"><path class="stroke" d="M 267 174 L 334 198 M 466 198 L 533 174"/>
+          <ellipse class="ink" cx="302" cy="217" rx="11" ry="16"/><ellipse class="ink" cx="498" cy="217" rx="11" ry="16"/></g>
+        <path class="stroke mouth-static" d="M 367 294 Q 400 285 433 294"/>
+      </g>
+      <g class="expression" id="shy">
+        <g class="eyes"><ellipse class="ink" cx="302" cy="211" rx="9" ry="13"/><ellipse class="ink" cx="498" cy="211" rx="9" ry="13"/></g>
+        <ellipse class="cheek" cx="251" cy="259" rx="33" ry="15"/><ellipse class="cheek" cx="549" cy="259" rx="33" ry="15"/>
+        <path class="stroke thin mouth-static" d="M 378 287 Q 400 299 422 287"/>
+      </g>
+      <g class="expression" id="curious">
+        <g class="eyes"><ellipse class="ink" cx="302" cy="210" rx="11" ry="18"/><ellipse class="ink" cx="498" cy="210" rx="13" ry="20"/>
+          <path class="stroke thin" d="M 467 171 Q 497 151 530 170"/></g>
+        <path class="stroke thin mouth-static" d="M 382 284 Q 406 280 422 292"/>
+      </g>
+      <g id="sleep-face">
+        <path class="stroke" d="M 267 214 Q 302 232 337 214 M 463 214 Q 498 232 533 214"/>
+        <path class="stroke thin" d="M 377 283 Q 400 296 423 283"/>
+        <text class="zzz" x="569" y="181" font-size="37" font-family="sans-serif" font-weight="700" fill="#6f9e8a">z</text>
+        <text class="zzz second" x="609" y="144" font-size="27" font-family="sans-serif" font-weight="700" fill="#6f9e8a">z</text>
+      </g>
+      <!-- The reference clip uses several mouth drawings, not a scaled black oval. -->
+      <g id="talk-mouth">
+        <g class="mouth-shape" id="mouth-line">
+          <path d="M 379 287 H 421" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <g class="mouth-shape" id="mouth-dot">
+          <ellipse cx="400" cy="287" rx="8" ry="9" fill="var(--ink)"/>
+          <path d="M 395 283 Q 400 280 405 283 L 405 286 H 395 Z" fill="#f8fff9"/>
+          <path d="M 395 292 Q 400 287 405 292" fill="none" stroke="#64b869" stroke-width="3"/>
+        </g>
+        <g class="mouth-shape" id="mouth-slit">
+          <ellipse cx="400" cy="287" rx="43" ry="10" fill="var(--ink)"/>
+          <ellipse cx="400" cy="286" rx="39" ry="6" fill="#f8fff9"/>
+          <path d="M 366 290 Q 400 296 434 290" fill="none" stroke="#4aab58" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+        <g class="mouth-shape" id="mouth-small">
+          <ellipse cx="400" cy="287" rx="27" ry="17" fill="var(--ink)"/>
+          <ellipse cx="400" cy="288" rx="24" ry="14" fill="#24783f"/>
+          <path d="M 378 279 Q 400 271 422 279 L 421 283 Q 400 279 379 283 Z" fill="#f8fff9"/>
+          <path d="M 383 299 Q 400 288 418 298 Q 401 304 383 299 Z" fill="#69c771"/>
+        </g>
+        <g class="mouth-shape" id="mouth-wide">
+          <ellipse cx="400" cy="287" rx="46" ry="25" fill="var(--ink)"/>
+          <ellipse cx="400" cy="289" rx="43" ry="22" fill="#24783f"/>
+          <path d="M 358 277 Q 400 262 442 277 L 441 284 Q 400 278 359 284 Z" fill="#f8fff9"/>
+          <path d="M 372 303 Q 401 285 429 303 Q 401 315 372 303 Z" fill="#65c36e"/>
+        </g>
+      </g>
+      <g id="thinking-dots" fill="var(--ink)"><circle cx="375" cy="356" r="5"/><circle cx="400" cy="356" r="5"/><circle cx="425" cy="356" r="5"/></g>
+      <g id="listening-rings" fill="none" stroke="#759e89" stroke-width="4"><path d="M 100 235 Q 75 240 100 275 M 700 235 Q 725 240 700 275"/><path d="M 75 217 Q 38 240 75 293 M 725 217 Q 762 240 725 293"/></g>
+    </svg>
+  </main>
+  <script>
+    // Display only: there are no buttons, click handlers, or keyboard bindings.
+    let lastRevision = -1;
+    let lastBlink = 0;
+    let inFlight = false;
+    let mouthTimer = null;
+    let previousMouth = 'line';
+    let mouthOpen = false;
+
+    function talkStep() {
+      if (!document.body.classList.contains('talking')) return;
+      // Alternate open and closed syllables at slightly different speeds.
+      const choices = mouthOpen
+        ? ['line', 'slit', 'dot', 'slit']
+        : ['small', 'wide', 'small', 'slit', 'dot'];
+      let next = choices[Math.floor(Math.random() * choices.length)];
+      if (next === previousMouth) next = choices[(choices.indexOf(next) + 1) % choices.length];
+      document.body.dataset.mouth = next;
+      previousMouth = next;
+      mouthOpen = !mouthOpen;
+      const pause = next === 'line' ? 145 + Math.random() * 110 : 85 + Math.random() * 105;
+      mouthTimer = setTimeout(talkStep, pause);
+    }
+
+    function setTalking(active) {
+      const wasTalking = document.body.classList.contains('talking');
+      if (active === wasTalking) return;
+      document.body.classList.toggle('talking', active);
+      if (active) {
+        mouthOpen = true;
+        previousMouth = 'wide';
+        document.body.dataset.mouth = 'wide';
+        mouthTimer = setTimeout(talkStep, 130);
+      } else {
+        clearTimeout(mouthTimer);
+        mouthTimer = null;
+        delete document.body.dataset.mouth;
+      }
+    }
+    async function refreshFace() {
+      if (inFlight) return;
+      inFlight = true;
+      try {
+        const response = await fetch('/api/state', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Face API: ${response.status}`);
+        const state = await response.json();
+        if (state.revision === lastRevision) return;
+        lastRevision = state.revision;
+        document.body.dataset.emotion = state.emotion;
+        document.body.dataset.activity = state.activity;
+        setTalking(state.talking);
+        if (state.blink_seq !== lastBlink) {
+          lastBlink = state.blink_seq;
+          document.body.classList.remove('force-blink');
+          void document.body.offsetWidth;
+          document.body.classList.add('force-blink');
+          setTimeout(() => document.body.classList.remove('force-blink'), 270);
+        }
+      } catch (error) {
+        // Keep the last face visible if the Python server is restarting.
+        console.debug(error);
+      } finally { inFlight = false; }
+    }
+    refreshFace();
+    setInterval(refreshFace, 180);
+  </script>
+</body>
+</html>

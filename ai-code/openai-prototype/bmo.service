@@ -1,0 +1,15 @@
+[Unit]
+Description=BMO face and AI backend
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/bmo-ai
+EnvironmentFile=%h/.config/bmo.env
+ExecStart=%h/bmo-ai/.venv/bin/python %h/bmo-ai/server.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

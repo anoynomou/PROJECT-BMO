@@ -1,6 +1,8 @@
 # BMO voice model
 
-`rl_v17p_distract_lora_15.safetensors` is a LoRA adapter for **PersonaPlex** (NVIDIA's full-duplex speech model built on Kyutai's Moshi). It changes how the model talks and answers, so it acts like BMO: short excited sentences, answers questions, and stops when you talk over it. It is not a complete model. You load it on top of the base weights below.
+`rl_v20s_distract_lora_96.safetensors` is a LoRA adapter for **PersonaPlex** (NVIDIA's full-duplex speech model built on Kyutai's Moshi). It makes the model talk like BMO and sound like BMO. The voice is built into the adapter, so you don't need a voice clip or any voice-conversion step. It speaks in short, excited sentences, answers questions, remembers names you tell it, does simple things you ask ("say good night"), and stops when you talk over it. It is not a complete model. You load it on top of the base weights below.
+
+The older adapter in this folder, `rl_v17p_distract_lora_15.safetensors`, only changes how the model talks. It needs a voice clip in the prompt (see [Prompting](#prompting)) and doesn't sound like BMO on its own.
 
 It runs on an Apple Silicon Mac with Kyutai's MLX runtime. It was developed on an M5 Pro, where it runs in real time (one 80 ms audio frame in about 60 ms).
 
@@ -32,7 +34,7 @@ python3 -m venv .venv
 
 ### What's in the adapter
 
-672 tensors: 336 A/B pairs, rank 64, bf16, scale 2.0. The names follow Kyutai's PyTorch Moshi. This is where each one goes in `moshi_mlx`:
+Both adapters have the same layout: 672 tensors, 336 A/B pairs, rank 64, bf16, scale 2.0. The names follow Kyutai's PyTorch Moshi. This is where each one goes in `moshi_mlx`:
 
 | Adapter name | `moshi_mlx` layer | Count |
 | --- | --- | --- |
@@ -45,20 +47,21 @@ python3 -m venv .venv
 
 ## Prompting
 
-PersonaPlex is prompted with a voice and a role before the conversation starts. Feed these frames, in this order, while the user stream gets the "user is quiet" codes (a 440 Hz tone):
+PersonaPlex is prompted with a role before the conversation starts. With `rl_v20s_distract_lora_96`, feed these frames in this order, while the user stream gets the "user is quiet" codes (a 440 Hz tone):
 
-1. The voice prompt: a short, clean clip of the voice it should use, 24 kHz, loudness-normalized to -24 LUFS and encoded with Mimi
-2. 0.5 s of silence
-3. The text prompt, wrapped as `<system> ... <system>` and encoded with `base/tokenizer_spm_32k_3.model`. The adapter was trained with this one:
+1. 0.5 s of silence
+2. The text prompt, wrapped as `<system> ... <system>` and encoded with `base/tokenizer_spm_32k_3.model`. The adapter was trained with this one:
 
    > You are BMO, a small living video game console who loves your friends. You are playful, curious and sweet. You speak in short, simple, excited sentences and love games, music and pretending.
 
-4. 0.5 s of silence
+3. 0.5 s of silence
 
 Then stream the microphone in 80 ms frames. Sampling used in training and testing: text temperature 0.7, top-k 25; audio temperature 0.8, top-k 250.
 
-The model speaks in whatever voice the voice prompt gives it. On the robot, BMO's own voice comes from a separate voice-conversion step, which is not included here.
+Don't add a voice clip. The voice comes from the adapter, and a clip would pull it toward the clip's voice.
+
+The older `rl_v17p_distract_lora_15` needs a voice clip first: a short, clean clip of the voice it should use, 24 kHz, loudness-normalized to -24 LUFS and encoded with Mimi, followed by the same three steps. It speaks in that clip's voice.
 
 ## Testing it
 
-Ask it a few things and talk over it while it answers: "What's two plus two?", "My dog's name is Biscuit", "What's your favorite game?". It should answer in a sentence or two, get simple questions right, remember names you tell it, and stop talking when you interrupt.
+Ask it a few things and talk over it while it answers: "What's two plus two?", "My dog's name is Biscuit", "What's your favorite game?", "Say good night." It should answer in BMO's voice in a sentence or two, get simple questions right, remember names you tell it, do what you ask, and stop talking when you interrupt.
